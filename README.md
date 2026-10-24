@@ -1,1 +1,38 @@
-# HORRORS
+# TERMINAL OF HORRORS
+
+An original, mobile-first horror RPG disguised as an abandoned machine intelligence's wiki. **Case 001: The Page That Remembers Tomorrow**.
+
+## Launch
+
+Requires Node 22+ and npm with registry access.
+
+```sh
+npm install
+npm run dev
+```
+
+Open the local URL Vite prints (typically `http://localhost:5173`). For a production build: `npm run test && npm run build && npm run preview`.
+
+The run autosaves in browser localStorage; restart clears the run, while local incident scores persist. Use the **transmissions** view to export replay JSON for debugging. No network game backend or wallet is included.
+
+## Rights and project direction
+The investigation structure takes inspiration from WORLD OF HORROR, but this prototype's prose and ASCII artwork are original. A purchased copy of a third-party game does not automatically authorize redistribution of its code, story, art or audio. Document permissions before attempting a public port or asset reuse. Morluto's REA can help investigate mechanics of lawfully obtained binaries; see `docs/GAME_DESIGN.md` for limitations.
+
+## WORLD OF HORROR reference study (October 2026)
+
+The user's purchased Windows 1.01 ZIP has been **statically inventoried** (without execution or decompilation). Findings and a gap analysis are in [`docs/WOH_BINARY_STUDY.md`](docs/WOH_BINARY_STUDY.md). To repeat the metadata-only inspection locally:
+
+```sh
+python3 tools/inspect_woh.py /private/path/wohgame_1_01_windows.zip
+```
+
+The program does not extract or ship source, gameplay text, audio, or images. The original build appears to use native GameMaker/YYC compilation and requires a configured native decompiler for deeper research. The gameplay bridge now includes three investigator attributes, deterministic success/failure skill tests, and a four-time-unit combat action queue. The traceable native-code mapping is in `docs/WOH_NATIVE_FINDINGS.md`. Original game footage/screenshots and written gameplay references were used as UI/flow reference only; the purchased Windows executable has not been run under Wine.
+
+## Current gameplay rules
+Choose an investigator, commit pages while navigating the three gated archive locations, and make seeded D6 checks on high-stakes choices. When combat starts, **tap actions to queue them** (up to 4 time units) and then press **LAUNCH SEQUENCE**. Enemy intentions are revealed before you launch; they execute once if the enemy survives. Queue state and roll outcomes survive save/resume and replay. The first case ends when you defeat the author and choose to delete/release it, disconnect after acquiring a witness, or lose your vitality, coherence or trace.
+
+## Build verification
+The checked-in CI workflow (`.github/workflows/verify.yml`) runs `npm run check` with Node 22. The source package includes no proprietary game content or downloaded Windows executable.
+
+## Offline diagnostic preview (optional)
+A separate downloadable `terminal-of-horrors-debug-preview.zip` contains a test build that works without npm. **This is not the React 19 / Vite production build**: it renders the same transpiled TypeScript + JSX with a bundled React 16 compatibility harness solely for browser behavior tests. Unzip, then run `python3 -m http.server 8766` inside the `offline-preview` folder and open `http://localhost:8766`. The production target remains `npm run dev` / `npm run build` using React 19 and Vite.

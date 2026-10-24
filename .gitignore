@@ -1,0 +1,16 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+coverage/
+playwright-report/
+
+# Purchased/reference-only third-party binaries and extracted resources.
+# Keep them private: never commit or deploy without explicit redistribution rights.
+wohgame_*.zip
+worldofhorror.exe
+data.win
+audiogroup1.dat
+.woh-research-private/
+*.YYC
+__pycache__/
