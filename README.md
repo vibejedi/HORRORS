@@ -32,6 +32,8 @@ The program does not extract or ship source, gameplay text, audio, or images. Th
 Choose an investigator, commit pages while navigating the three gated archive locations, and make seeded D6 checks on high-stakes choices. When combat starts, **tap actions to queue them** (up to 4 time units) and then press **LAUNCH SEQUENCE**. Enemy intentions are revealed before you launch; they execute once if the enemy survives. Queue state and roll outcomes survive save/resume and replay. The first case ends when you defeat the author and choose to delete/release it, disconnect after acquiring a witness, or lose your vitality, coherence or trace.
 
 ## Build verification
+**Verified:** GitHub Actions passed `npm run check` and produced a React 19/Vite `dist` archive in run [40101235031](https://github.com/vibejedi/HORRORS/actions/runs/40101235031). The production bundle passed an end-to-end headless Chromium touch run on a 390px viewport and a desktop 1440px layout check. A separate in-browser localStorage reload check could not be completed because the test sandbox prohibits navigations, although versioned save/resume passes automated engine tests. See `docs/PROGRESS.md` for the verification matrix.
+
 The checked-in CI workflow (`.github/workflows/verify.yml`) runs `npm run check` with Node 22. The source package includes no proprietary game content or downloaded Windows executable.
 
 ## Offline diagnostic preview (optional)

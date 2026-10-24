@@ -31,11 +31,12 @@
 - No protected artwork, dialogue, binaries, or native decompiled code added to the public-source package.
 - The executable has **not** been run or analyzed with REA/Ghidra. Native function boundary localization by a read-only PE script is complete; Node version in this sandbox is below REA's documented minimum and no native provider is configured.
 
-## Verification status
-- Game engine integration tests: **10/10 passing via `npm test`** (Node 22.16.0), including both final pacts, death/restart, escape, save/resume, tamper rejection, gates and deterministic replay.
-- Production bundle: **blocked/unverified**. `npm install` timed out: network DNS `EAI_AGAIN registry.npmjs.org`; `npm run build` fails because React/Vite packages and type declarations are missing. Source has not yet been production bundled.
-- CSS-only layout smoke: **passed** at 390 × 844 and 1440 × 900 in headless Chromium (no horizontal overflow, responsive drawer positioning). This used representative static markup, **not** a running React build. Interactive offline fallback React 16 mobile/desktop playthrough was subsequently **verified**; actual React 19/Vite integration remains **unverified** until npm dependencies can be installed. Local-storage behavior was verified with a mocked browser store in tests.
-- Purchased WORLD OF HORROR ZIP: **acquired and statically inventoried** (see binary study); no third-party assets or code bundled. The executable has **not been run**; compiled gameplay logic has **not** been decompiled.
+## Verification status — production build verified 2026-10-25
+- **GitHub main committed:** `fd69cbcc229a516d2a909c1428d06b19d3524ef1`, <https://github.com/vibejedi/HORRORS>.
+- **Real React 19/Vite CI build: PASS.** GitHub Actions push run <https://github.com/vibejedi/HORRORS/actions/runs/40101235031> executed `npm install --no-audit --no-fund`, `npm run check` and uploaded `terminal-of-horrors-dist` artifact. CI produced complete `dist/index.html` + hashed JS/CSS assets. The local sandbox itself still cannot reach the npm registry; CI is the source of production build verification.
+- **Actual production JS/CSS browser simulation: PASS.** Loaded the built Vite JS bundle and its stylesheet into headless Chromium via Playwright's injected-script approach (external Google Font import removed from the test harness only, not the published dist). At 390 × 844, touchscreen actions traversed all three locations, passed three combat encounters in **2 / 2 / 3 rounds**, signed release pact, and reached `TOMORROW WALKS FREE`. Zero uncaught JavaScript errors and zero horizontal overflow. At 1440 × 900, desktop startup rendered without errors or horizontal overflow. Screenshots saved externally to the verification package.
+- **Engine integration tests: 10/10 PASS**, including both final pacts, death/restart, escape, versioned save/resume, tamper rejection, progression gates, action queue and exact seed/action replay. Browser `localStorage` persistence was tested in engine unit tests with a controlled mocked store; an additional Playwright network-origin reload test was blocked by sandbox navigation policy, so actual cross-reload persistence remains to be manually verified on deployed/localhost origin.
+- **Read-only purchased-game investigation:** inventory, documented content schema and PE native candidate locations are complete. WOH executable itself has **not** been executed; Ghidra/REA full semantic decompilation remains outstanding. No third-party artwork/story/code bundled.
 
 ## Known issues / considerations
 - Browser save requires storage availability; private mode restrictions silently prevent persistence while current run remains playable.
@@ -44,9 +45,8 @@
 - No server-side anti-cheat: scores are labeled **local-only**, not trustworthy for prizes.
 
 ## Next milestones
-1. Install Node dependencies in an environment with npm access, run `npm run check`, inspect any TS/build failures and rerun tests.
-2. Open dev build at 390px phone size and desktop; validate tap navigation, scrolling, action buttons and viewport clipping.
-3. Record playthrough of each final ending; tune resources for fair runs across multiple seeded samples.
-4. On a configured local analysis workstation, use REA + Ghidra/IDA/Hopper to verify critical runtime mechanics beyond the completed static inventory; do not publish protected story/art without rights.
-5. Prioritize stat-checked event branches and typed rewards as the next engine upgrade based on the verified mod schemas.
-6. Optional public beta hosting once build/browser checks pass. Wallet and real rewards remain deferred.
+1. Deploy verified static Vite `dist/` to a preview domain and test touch scrolling, reload/autosave and PWA/mobile browser performance with real devices (especially iOS Safari).
+2. Explore the other endings and balance across a wider, reproducible seed cohort.
+3. Set up REA with a supported Node version and Hopper/Ghidra/IDA on a separate permitted analysis workstation; walk the `event_test` and `combat_action` call graphs with clear evidence labels.
+4. Expand data-driven stat checks, items, mystery variants and scene transitions in the **original** Terminal of Horrors content; keep the purchased game's story/art/assets private absent rights clearance.
+5. Defer crypto wallet integration, public score submissions and rewards until a future backend phase.
