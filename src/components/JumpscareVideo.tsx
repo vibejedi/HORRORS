@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { JumpscareClip } from '../game/jumpscares.ts';
+import { playScareStinger } from '../animation/scareAudio.ts';
 
 interface Props {
   clip: JumpscareClip;
@@ -67,12 +68,22 @@ export function JumpscareVideo({clip,preview,title,detail,poster,soundEnabled,on
     void start();
     const failsafe=window.setTimeout(()=>setPlayback(s=>s==='playing'?s:'fallback'),4600);
     const hardStop=window.setTimeout(finish,Math.max(6500,(clip.expectedSeconds+3)*1000));
-    const ready=()=>setPlayback('playing');
+    let stinger: number|undefined;
+    const ready=()=>{
+      setPlayback('playing');
+      if(soundEnabled){
+        stinger=window.setTimeout(()=>{
+          // Use one synthesized impact only when autoplay policy muted the film.
+          if(video.muted)playScareStinger();
+        },410);
+      }
+    };
     const bad=()=>setPlayback('fallback');
     video.addEventListener('playing',ready);
     video.addEventListener('error',bad);
     return ()=>{
       window.clearTimeout(failsafe);window.clearTimeout(hardStop);
+      if(stinger!==undefined)window.clearTimeout(stinger);
       video.removeEventListener('playing',ready);
       video.removeEventListener('error',bad);
       video.pause();

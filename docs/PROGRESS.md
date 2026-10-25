@@ -101,3 +101,5 @@
 - Video player now shows a dark loading state instead of spoiling the scare with its still portrait; unmuted playback is attempted first, then automatically retries muted if blocked by browser autoplay. An explicit tap-to-unmute control appears when sound is blocked.
 - Added separate persistent SCARE AUDIO ON/OFF toggle, video loading and playback watchdogs, mobile-sized skip control and keyboard focus trap; the existing FX OFF and OS reduced-motion bypass remain.
 - Video still streams from Higgsfield CDN; physical iOS/Android performance, actual audio playback, and user-perceived scare quality require player validation. No changes to seeded engine, saves or endings.
+
+- Added a short procedural paper-rip/bass impact only as an autoplay-muted fallback. Its AudioContext is primed on an actual player gesture, never changes seeded game results, and respects SCARE AUDIO OFF. Mobile Safari may still limit sound; no claim of physical-device audio verification.

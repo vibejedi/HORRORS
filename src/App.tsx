@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { JumpscareVideo } from './components/JumpscareVideo.tsx';
+import { unlockScareAudio } from './animation/scareAudio.ts';
 import { clipForEnding } from './game/jumpscares.ts';
 import { describeMoment, fatalCue, isNewFatality } from './animation/effects.ts';
 import type { FatalEnding, Moment } from './animation/effects.ts';
@@ -218,7 +219,7 @@ function App(){
   const ScoresPage=()=> <article className="content-sheet"><div className="eyebrow">LOCAL ARCHIVE / PERSONAL RECORDS</div><h1>Incident reports.</h1><p className="lead">Scores from this device only. There is no shared leaderboard or crypto payout.</p><div className="score-table" role="table" aria-label="Local score history"><div className="score-row score-head" role="row"><span>RANK</span><span>INVESTIGATOR</span><span>OUTCOME</span><span>SCORE</span></div>{scores.length?scores.map((x,i)=><div key={x.id} className="score-row" role="row"><span>{String(i+1).padStart(2,'0')}</span><span>{INVESTIGATORS[x.investigator]?.name??x.investigator}<small>{x.turns} actions · seed {x.seed}</small></span><span>{x.ending}</span><strong>{x.score}</strong></div>):<p className="empty-state">No incident reports have been filed. Your first ending will appear here.</p>}</div></article>;
 
   const jump = fatal?fatalCue(fatal.ending):null;
-  return <div className={`app-shell ${canAnimate?'motion-live':'motion-quiet'}`}>
+  return <div className={`app-shell ${canAnimate?'motion-live':'motion-quiet'}`} onPointerDownCapture={()=>{if(canAnimate&&scareSound)unlockScareAudio();}} onKeyDownCapture={()=>{if(canAnimate&&scareSound)unlockScareAudio();}}>
     <div className="archive-noise" aria-hidden="true"/><div className="archive-dust" aria-hidden="true">{Array.from({length:7},(_,i)=><i key={i}/>)}</div>
     {jump && fatal && <JumpscareVideo key={fatal.id} clip={clipForEnding(fatal.ending)} preview={Boolean(fatal.preview)} soundEnabled={scareSound} title={jump.title} detail={jump.detail} poster={ARTWORK.enemies[jump.art]} onComplete={()=>setFatal(null)}/>}
     <div className="screen-reader-only" aria-live="polite">{lastCue}</div>
