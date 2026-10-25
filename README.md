@@ -38,3 +38,9 @@ The checked-in CI workflow (`.github/workflows/verify.yml`) runs `npm run check`
 
 ## Offline diagnostic preview (optional)
 A separate downloadable `terminal-of-horrors-debug-preview.zip` contains a test build that works without npm. **This is not the React 19 / Vite production build**: it renders the same transpiled TypeScript + JSX with a bundled React 16 compatibility harness solely for browser behavior tests. Unzip, then run `python3 -m http.server 8766` inside the `offline-preview` folder and open `http://localhost:8766`. The production target remains `npm run dev` / `npm run build` using React 19 and Vite.
+
+## Illustrated v0.3 playable case
+
+The browser game now includes original generated art for two investigators, three locations, two normal enemies, the final entity, and the archive cover. All images are optimized WebP files mapped by `src/game/art.ts` and rendered with responsive HTML/CSS UI and original ASCII records. The gameplay is implemented in `src/game/engine.ts`, not in the illustrations.
+
+Run `npm run check` (11 tests and production compile), then `npm run dev` for local play. Open the network-reachable Vite host on a phone to test touch controls. The purchased WORLD OF HORROR game files are **not** a dependency and are **not** shipped. `npm`/Vite build verification for this particular art integration must be confirmed in CI.

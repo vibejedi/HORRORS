@@ -50,3 +50,19 @@
 3. Set up REA with a supported Node version and Hopper/Ghidra/IDA on a separate permitted analysis workstation; walk the `event_test` and `combat_action` call graphs with clear evidence labels.
 4. Expand data-driven stat checks, items, mystery variants and scene transitions in the **original** Terminal of Horrors content; keep the purchased game's story/art/assets private absent rights clearance.
 5. Defer crypto wallet integration, public score submissions and rewards until a future backend phase.
+
+## Update 0.3 — Illustrated playable case (2026-10-25)
+- Integrated **10 original generated WebP illustrations** in `public/art/` (approximately 1.2 MB combined): frontispiece, two investigator portraits, three location scenes, two ordinary enemies, final boss, and combat composition reference.
+- Added strongly typed `src/game/art.ts` image manifest and per-event bindings for all ten data-driven events. Original ASCII drawings remain available via expandable plain-text records.
+- Aligned in-game names with the new art direction: **Mara Quill**, **Ilya Wren**, **Index Chamber**, **Transmission Well**, **Relic Vault**, **Paper Witness**, **Ledger Leech**, and **The Unauthored Revision**. Save/action identifiers were intentionally preserved for backwards compatibility with v2 run saves.
+- Refactored combat presentation into a two-column encounter portrait + tactics UI on desktop, stacked portrait, visible intention, action queue and thumb-friendly launch controls on phones. Added a compact mobile vitality/coherence/trace bar.
+- Styled the archive in high-contrast black and bone-white, removed the earlier olive emphasis, and designed a title page with the original cover artwork and new investigator portraits. All assets are generated original illustrations; **no WOH sprites, scenes, dialogue, or proprietary executable components are included**.
+- Added illustration-contract test. **11/11 engine/content tests PASS**, plus TypeScript syntax transpilation via locally available compiler and offline diagnostic HTML generation.
+- **Verification note:** Browser automation navigation to both local HTTP and `file://` was rejected by the sandbox administrator in this new session. The new illustrated UI has NOT completed a current interactive mobile playthrough in this environment. Production React/Vite verification is pending the next GitHub Actions run; prior passing React/Vite build was for v0.2.
+- **Repository privacy warning:** GitHub returned visibility `public` for `vibejedi/HORRORS` during this update. A user-facing change may have targeted a different repository or not applied. Do not commit purchased third-party files, and confirm desired visibility in GitHub Settings before further sensitive research.
+
+### Next release gates
+1. Green GitHub Actions `npm run check` on the v0.3 commit; then inspect `dist` and test the real bundle on iOS Safari/Android Chrome.
+2. Verify artwork cropping, touch navigation, combat buttons, save/reload, and accessibility on a hosted preview; update the playthrough record.
+3. Treat generated paintings as **illustration assets**, not frame-by-frame animations or original WOH sprite sheets. Add lightweight sprite strips/animated overlays in a subsequent phase.
+4. Keep WOH binary research private, and obtain appropriate rights before incorporating any protected original assets into a distributed game.

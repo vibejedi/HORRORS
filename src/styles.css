@@ -20,3 +20,115 @@
   .combat-sheet>.combat-choices{order:6}
   .combat-sheet>.art-panel{order:7;margin:14px 0 0}
 }
+
+/* CASE 001 / The archive grows its own eyes. Original monochrome image system. */
+:root{font-family:'DM Mono',ui-monospace,SFMono-Regular,monospace;color:#ebebe3;background:#080909}
+body{background:#080909}
+.app-shell{background:radial-gradient(ellipse at top right,#23252375,transparent 64%),#090a0a}
+.sidebar{background:#0d0e0d;border-right-color:#454845}
+.identity{border-bottom:1px solid #40413e;margin-bottom:19px}
+.brand{font-family:Georgia,'Times New Roman',serif;font-weight:900;letter-spacing:.07em;font-size:23px;line-height:.9}
+.brand-sub{color:#8c9089}
+.glyph{background:#ecebe3;color:#0a0b0a;border-color:#ecebe3}
+.sidebar-section,.eyebrow,.block-label,.small-meta{color:#a9aba4}
+.nav-link{color:#c7c9c3}
+.nav-link:hover,.nav-link.active{background:#e7e7e41a;color:white}
+.nav-link.active{border-left-color:white}
+.sidebar-bottom{border-top:1px solid #444;color:#a4a5a0}
+.pulse{background:#e5e5e0;box-shadow:0 0 9px #e2e2e2}
+.workspace{max-width:1660px}
+.topline{border-bottom-color:#4b4c49;color:#adb0aa}
+.content-sheet,.stat-card{background:#111211;border:1px solid #535652;box-shadow:4px 4px 0 #000;margin-bottom:22px}
+.content-sheet h1,.location-header h2,.stat-card h3{font-family:Georgia,'Times New Roman',serif;color:#f0f0e9;letter-spacing:-.04em}
+.content-sheet h1{font-size:clamp(30px,3.6vw,53px);font-weight:700}
+.lead{color:#c9cac4}
+.tag,.document-block,.intent-box,.read-state,.inline-note{border-color:#656761;background:#191b19;color:#ecece2}
+.document-block{border-left:3px solid #e1e1da}
+.document-block p,.transmission{color:#e2e2db}
+.art-panel{background:#070808;border-color:#50524b}.art-panel pre{color:#e1e1d9}
+.illustration{position:relative;background:#030303;border:1px solid #525552;margin:16px 0 22px;overflow:hidden}
+.illustration>img{width:100%;max-height:465px;display:block;object-fit:contain;object-position:center;background:#000;image-rendering:auto;filter:grayscale(1)}
+.illustration figcaption{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 11px;font:9px 'DM Mono',monospace;letter-spacing:.4px;color:#d6d6ca;background:#161816;border-top:1px solid #4c4f49;text-transform:uppercase}
+.illustration figcaption span:last-child{color:#90958d}
+.illustration-compact>img{max-height:270px;width:100%;object-fit:cover;object-position:center}
+.ascii-disclosure{border:1px solid #41433d;padding:10px 12px;margin:10px 0 15px;background:#0c0d0c}
+.ascii-disclosure summary{cursor:pointer;font:10px 'DM Mono',monospace;color:#a7aca3;letter-spacing:1px}
+.ascii-disclosure .art-panel{margin:10px 0 0}
+.location-ascii{margin-bottom:0}
+.choice,.move,.ritual-opt,.character-card,.page-chip{background:#171917;border-color:#5a5b57;color:#e9e9e3}
+.choice:hover,.move:hover:not(:disabled),.ritual-opt.selected,.character-card.selected{border-color:#f2f2ed;background:#272927}
+.choice-letter,.arrow,.nav-link,.investigator-attributes,.attr-summary,.move strong span,.eyebrow span{color:#e7e7e0}
+.page-chip.selected,.primary{background:#e7e7df;color:#0c0c0b;border-color:#e7e7df}
+.page-chip.selected{font-weight:700}
+.primary:hover{background:#fff;color:#070707}
+.secondary{border-color:#757773;color:#e7e8df}
+.secondary:hover{border-color:#fff}
+.progress-track,.meter-track,.queue-pips span{background:#484a45}
+.progress-track>div,.meter-fill,.queue-pips .filled{background:#e9e9e1}
+.meter-danger,.hostile-fill{background:#ddd6d0}
+.meter-meta,.meter-meta strong{color:#e0e1db}
+.status-portrait{display:block;width:100%;max-height:215px;object-fit:cover;object-position:center 23%;filter:grayscale(1);border:1px solid #515450;background:#000}
+.status-column .stat-card{padding:15px}
+.stat-card h3{font-size:27px}
+.meter-help{color:#b5b7af}
+.intent-box{border:1px solid #eee5dc;color:#fff;padding:15px;background:#272521}
+.intent-box strong,.danger-text{color:#f1e2d8}
+.intent-box small{color:#c6bfb7}
+.combat-sheet{border-color:#a29b96}
+.combat-hp{color:#f1eee6}
+.move strong{align-items:center;gap:8px}.move .move-glyph{font-size:20px;color:#e7e7e0}.move .move-cost{margin-left:auto;font-size:10px;color:#eee}
+.move small{color:#c1c3bc}.queued-actions>span:not(.muted){color:#ecece7;background:#232522;border-color:#a1a39a}
+.intro-grid{display:grid;grid-template-columns:1fr minmax(240px,.78fr);gap:26px;align-items:stretch;max-width:1130px;margin:20px auto 40px}
+.intro-grid .illustration{margin:0;min-height:380px}
+.intro-grid .illustration img{height:100%;max-height:520px;object-fit:cover;object-position:top}
+.intro-text{padding:32px 0;display:flex;flex-direction:column;justify-content:center}
+.intro-terminal{margin-top:25px;font:11px/2 'DM Mono',monospace;color:#c7c9c3;border-left:2px solid #e7e7df;padding-left:16px}
+.intro-terminal span{animation:blink 1.2s step-end infinite}
+.character-card{overflow:hidden}.character-portrait{width:100%;display:block;height:164px;object-fit:cover;object-position:center 15%;filter:grayscale(1);border-bottom:1px solid #565953;margin-bottom:13px}
+.character-card.selected .character-portrait{filter:grayscale(1) contrast(1.12)}
+.battle-stage{display:grid;grid-template-columns:minmax(220px,.88fr) minmax(280px,1fr);gap:18px;align-items:start}
+.battle-stage>.illustration{margin:0}
+.battle-stage>.illustration>img{max-height:650px;object-fit:contain}
+.battle-tactics .combat-hp{margin:0 0 17px}
+.battle-tactics .combat-choices{margin-top:18px}
+.battle-tactics .launch-actions{margin-bottom:0}
+.mobile-stats{display:none}
+@media(max-width:1150px){.battle-stage{grid-template-columns:minmax(160px,.75fr) minmax(260px,1fr)}.move-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.intro-grid{grid-template-columns:1fr minmax(210px,.8fr)}.intro-grid .illustration img{max-height:405px}.battle-stage{grid-template-columns:1fr}}
+@media(max-width:760px){
+ .app-shell{background:#090a09}
+ .workspace{padding:0 13px}
+ .mobile-bar{background:#0c0d0c;border-bottom:1px solid #666}
+ .mobile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:10px}
+ .mobile-stats>span{background:#161816;border:1px solid #555;padding:9px 6px;font:9px 'DM Mono',monospace;text-align:center;color:#9ea49d}
+ .mobile-stats b{display:block;color:#f5f4eb;margin-top:4px;font-size:14px}
+ .play-layout{padding-top:10px}
+ .intro-grid{display:flex;flex-direction:column;margin:14px 0 18px;gap:10px}
+ .intro-text{padding:6px 0}
+ .intro-terminal{display:none}
+ .intro-grid .illustration{min-height:0;max-height:235px}
+ .intro-grid .illustration>img{max-height:210px;height:210px;object-fit:cover;object-position:center 19%}
+ .hero-title{font-size:clamp(30px,8vw,48px);margin:8px 0}
+ .setup-copy{max-width:600px;margin-bottom:10px}
+ .character-portrait{height:170px}
+ .illustration>img{max-height:265px;object-fit:cover;object-position:center 32%}
+ .illustration-compact>img{max-height:190px}
+ .combat-sheet{display:block}
+ .battle-stage{display:flex;flex-direction:column;gap:10px}
+ .battle-stage>.illustration{order:1;width:100%;max-height:190px;overflow:hidden}
+ .battle-stage>.illustration>img{height:165px;max-height:165px;object-fit:cover;object-position:center 33%}
+ .battle-tactics{order:2;width:100%;display:flex;flex-direction:column}
+ .battle-tactics .combat-hp{order:1;margin:6px 0 12px}
+ .battle-tactics .intent-box{order:2}
+ .battle-tactics .combat-choices{order:3;margin-top:12px}
+ .battle-tactics .launch-actions{position:sticky;bottom:0;background:#131513;padding:9px 0;z-index:5}
+ .move-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .move{min-height:70px}
+ .status-column{margin-top:0}
+ .status-portrait{max-height:140px;object-position:center 14%}
+ .topline span:last-child{display:none}
+ .content-sheet{padding:18px 15px}
+ .intro-grid .illustration figcaption{padding:6px 10px}
+}
+@media(max-width:390px){.character-portrait{height:130px}.battle-stage>.illustration>img{height:140px}.move{padding:9px;min-height:82px}.move .move-glyph{font-size:16px}.move strong{font-size:10px}.move small{font-size:9px}.launch-actions{flex-direction:row}.launch-actions button{width:auto}.launch-actions .primary{min-width:0;flex:1}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}

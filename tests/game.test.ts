@@ -168,3 +168,19 @@ test('escaping an enemy allows re-entering that file (no softlock)',()=>{
  }
  assert.ok(succeeded);
 });
+
+test('original illustrations are mapped to every playable investigator, location, and enemy', async()=>{
+ const {ARTWORK,EVENT_ARTWORK}=await import('../src/game/art.ts');
+ const {stat}=await import('node:fs/promises');
+ const {fileURLToPath}=await import('node:url');
+ const {resolve,dirname}=await import('node:path');
+ const root=resolve(dirname(fileURLToPath(import.meta.url)),'..','public');
+ const references=[ARTWORK.cover,...Object.values(ARTWORK.investigators),...Object.values(ARTWORK.enemies),...Object.values(ARTWORK.locations),...Object.values(EVENT_ARTWORK)];
+ assert.equal(new Set(references).size,9);
+ for(const path of references){
+  assert.match(path,/^\/art\/[a-z-]+\.webp$/);
+  const file=await stat(resolve(root,path.slice(1)));
+  assert.ok(file.size>1000&&file.size<450000,`Optimized art asset: ${path} (${file.size} bytes)`);
+ }
+ for(const event of EVENTS)assert.ok(EVENT_ARTWORK[event.id],`Event ${event.id} has an illustration`);
+});

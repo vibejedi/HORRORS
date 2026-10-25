@@ -22,3 +22,11 @@ Intimate, cryptic, grimly bureaucratic. The archive notices the player. Witnesse
 
 ## Interaction priorities
 Tap/click first; keyboard arrows are not required. Reader must see: where they are, which pages remain, what they lose on each choice, and whose turn it is. Combat controls remain action buttons, not vague conversation prompts. No external AI or wallet prompts. Disable locked chapters, explain unlock prerequisites in the design, show readable outcome messages, and distinguish *local* score history from shared competition.
+
+## Illustrated archive assets (v0.3)
+- Source illustrations were generated for Terminal of Horrors; optimized mono WebP files live in `public/art/`, linked via typed `src/game/art.ts`.
+- Keep images black-and-white / chalk-on-ink with intentionally visible stipple. Avoid colour filters, full-screen gradients and overscaled pixelation that destroys texture.
+- Portraits should be vertically framed; locations use wide illustrations. Text, user choices, stats and HUD must be **real HTML**, not flattened text embedded in generated images. Art may contain decorative inscriptions only.
+- Combat: desktop two-column scene / controls; on phones use short cropped illustration above visible intent and 48px+ touch-friendly action buttons. Never bury controls behind full-height art.
+- Retain the original ASCII asset in a `<details>` disclosure in every document as an archive artifact, alongside the illustrated attachment.
+- Never upload third-party artwork extracted from WORLD OF HORROR to this directory; its purchase provides no redistribution licence.

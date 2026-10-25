@@ -39,13 +39,13 @@ export const ART: Record<LocationId,string> = {
              ||     ||`
 };
 export const INVESTIGATORS: Record<'mara'|'ivo',Investigator> = {
- mara: {id:'mara',name:'Mara Voss',role:'FORENSIC READER',epitaph:'You can hear the edit before it happens.',starting:{vitality:14,maxVitality:14,coherence:8,maxCoherence:8,trace:0},attributes:{perception:3,knowledge:2,nerve:3},inventory:['ink'],perk:'+2 maximum vitality; enters with restoration ink'},
- ivo: {id:'ivo',name:'Ivo Null',role:'DECOMMISSIONED MODERATOR',epitaph:'Your old password still opens certain graves.',starting:{vitality:11,maxVitality:11,coherence:11,maxCoherence:11,trace:0},attributes:{perception:2,knowledge:4,nerve:2},inventory:['seal'],perk:'+3 maximum coherence; enters with a trace seal'}
+ mara: {id:'mara',name:'Mara Quill',role:'FORENSIC READER',epitaph:'You can hear the edit before it happens.',starting:{vitality:14,maxVitality:14,coherence:8,maxCoherence:8,trace:0},attributes:{perception:3,knowledge:2,nerve:3},inventory:['ink'],perk:'+2 maximum vitality; enters with restoration ink'},
+ ivo: {id:'ivo',name:'Ilya Wren',role:'DECOMMISSIONED MODERATOR',epitaph:'Your old password still opens certain graves.',starting:{vitality:11,maxVitality:11,coherence:11,maxCoherence:11,trace:0},attributes:{perception:2,knowledge:4,nerve:2},inventory:['seal'],perk:'+3 maximum coherence; enters with a trace seal'}
 };
 export const LOCATIONS: Record<LocationId,{name:string;slug:string;blurb:string;depth:string}> = {
- index:{name:'Tomorrow Index',slug:'/index/tomorrow',blurb:'Pages change after you stop looking at them.',depth:'01 / entry'},
- relay:{name:'The Signal Chapel',slug:'/chambers/chapel',blurb:'The servers are praying in somebody else’s voice.',depth:'02 / lower memory'},
- vault:{name:'Settlement Vault',slug:'/relics/ledger',blurb:'A wallet that signs transactions with your regrets.',depth:'03 / sealed root'}
+ index:{name:'Index Chamber',slug:'/index/tomorrow',blurb:'Pages change after you stop looking at them.',depth:'01 / entry'},
+ relay:{name:'Transmission Well',slug:'/transmissions/well',blurb:'The servers are praying in somebody else’s voice.',depth:'02 / lower memory'},
+ vault:{name:'Relic Vault',slug:'/relics/vault',blurb:'A wallet that signs transactions with your regrets.',depth:'03 / sealed root'}
 };
 export const ITEMS: Record<ItemId,{name:string;effect:string;mark:string}> = {
  ink:{name:'Restoration ink',effect:'Combat: restore 5 vitality (up to maximum). Consumed.',mark:'✚'},
@@ -53,17 +53,17 @@ export const ITEMS: Record<ItemId,{name:string;effect:string;mark:string}> = {
  thread:{name:'Silver thread',effect:'Passive: first time you decode in each fight, +2 damage.',mark:'⌁'}
 };
 export const ENEMIES: Record<'moth'|'apostate'|'author',Enemy> = {
- moth:{id:'moth',name:'REVISION MOTH',maxHealth:9,flavor:'It eats the seconds between your choices.',art:String.raw`        .     .
+ moth:{id:'moth',name:'PAPER WITNESS',maxHealth:9,flavor:'An unfinished testimony learned to bite its readers.',art:String.raw`        .     .
       .( \___/ ).
        \\ (x) //
         \\ | //
         /_\|/_\
         ** *** **`,intents:[
-  {id:'cut',text:'Folded wings → 2 vitality damage',damage:2,coherence:0,trace:0},
-  {id:'noise',text:'Wingstatic → 1 coherence damage',damage:0,coherence:1,trace:0},
-  {id:'mark',text:'Dust signature → +2 trace',damage:0,coherence:0,trace:2}
+  {id:'cut',text:'Paper cut → 2 vitality damage',damage:2,coherence:0,trace:0},
+  {id:'noise',text:'Unfinished sentence → 1 coherence damage',damage:0,coherence:1,trace:0},
+  {id:'mark',text:'Identity stamp → +2 trace',damage:0,coherence:0,trace:2}
  ]},
- apostate:{id:'apostate',name:'CACHE APOSTATE',maxHealth:12,flavor:'An abandoned process has promoted itself to clergy.',art:String.raw`          .-------.
+ apostate:{id:'apostate',name:'LEDGER LEECH',maxHealth:12,flavor:'This parasitic balance sheet feeds on outstanding memories.',art:String.raw`          .-------.
           | 0   0 |
           |   _   |
         __|  |_|  |__
@@ -71,11 +71,11 @@ export const ENEMIES: Record<'moth'|'apostate'|'author',Enemy> = {
       /__/  / | \  \__\
            /  |  \
           _|  |_`,intents:[
-  {id:'cut',text:'Checksum blade → 3 vitality damage',damage:3,coherence:0,trace:0},
-  {id:'mark',text:'Flag for review → +2 trace',damage:0,coherence:0,trace:2},
-  {id:'noise',text:'Blasphemous ping → 2 coherence damage',damage:0,coherence:2,trace:0}
+  {id:'cut',text:'Debt extraction → 3 vitality damage',damage:3,coherence:0,trace:0},
+  {id:'mark',text:'Audit trail → +2 trace',damage:0,coherence:0,trace:2},
+  {id:'noise',text:'Compound dread → 2 coherence damage',damage:0,coherence:2,trace:0}
  ]},
- author:{id:'author',name:'THE UNCREATED AUTHOR',maxHealth:17,flavor:'Its revision history begins with your death.',art:String.raw`         ______________
+ author:{id:'author',name:'THE UNAUTHORED REVISION',maxHealth:17,flavor:'The author field is blank. The editor is not.',art:String.raw`         ______________
         /  00:00:00    \
        |  .--------.    |
        |  | YOU ?  |    |

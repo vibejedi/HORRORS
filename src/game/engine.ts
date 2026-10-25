@@ -47,7 +47,7 @@ function winFight(s:GameState){
   s.message=s.ending==='deleted'?'The page is gone. Tomorrow still has an empty margin.':'You release the author. Its first act is to remember your kindness.';
  } else {
   s.phase='archive';s.stats.trace=clamp(s.stats.trace-1,0,10);
-  s.message=enemy==='moth'?'The moth folds into an inert footnote. The vault is listening.':'The apostate vanishes into a zero-balance receipt.';
+  s.message=enemy==='moth'?'The paper witness folds into an inert footnote. The vault is listening.':'The ledger leech collapses into a zero-balance receipt.';
  }
 }
 function validateMove(s:GameState,move:CombatMove,pending:readonly CombatMove[]=[]) {
