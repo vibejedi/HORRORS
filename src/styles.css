@@ -247,3 +247,18 @@ body{background:#080909}
 .video-scare__caption strong{font-size:clamp(1.1rem,4vw,2.1rem)}
 .video-scare__skip{position:absolute;right:max(1rem,env(safe-area-inset-right));bottom:max(1rem,env(safe-area-inset-bottom));z-index:3;min-height:48px;min-width:110px;padding:.65rem 1rem;color:#111;background:#fff;border:2px solid #777;font:inherit;cursor:pointer}
 @media(prefers-reduced-motion:reduce){.video-scare__static{display:none}}
+
+/* Video v0.5.1: do NOT reveal the monster while footage loads. */
+.video-scare{background:#000;overflow:hidden}
+.video-scare__blackout{position:absolute;inset:0;background:#000;z-index:0}
+.video-scare__movie{z-index:1;display:block;object-fit:cover;object-position:50% 50%}
+.video-scare--loading .video-scare__movie{opacity:0}
+.video-scare--playing .video-scare__movie{opacity:1}
+.video-scare__still{z-index:1}
+.video-scare__caption{z-index:2}
+.video-scare__controls{position:absolute;inset:auto max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));z-index:4;display:flex;justify-content:space-between;align-items:end;gap:12px;color:#bcbcbc;letter-spacing:.11em;font-size:10px;pointer-events:none}
+.video-scare__controls>*{pointer-events:auto}
+.video-scare__skip{position:static;min-height:46px;min-width:160px;cursor:pointer;border-radius:0}
+.video-scare__sound{position:absolute;top:max(24px,env(safe-area-inset-top));right:max(16px,env(safe-area-inset-right));z-index:5;padding:12px;background:#fff;color:#000;border:1px solid #000;font:inherit;cursor:pointer}
+@media(max-width:600px){.video-scare__controls{flex-direction:column;align-items:stretch}.video-scare__controls>span{display:none}.video-scare__skip{width:100%;min-height:48px}}
+@media(prefers-reduced-motion:reduce){.video-scare__movie{transition:none!important}}

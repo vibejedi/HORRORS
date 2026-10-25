@@ -95,3 +95,9 @@
 - Respects existing FX OFF and OS reduced-motion behavior. Video is muted by default for autoplay compatibility. A later optional sound control requires a separate user-gesture implementation.
 - Presentation state remains separate from seeded combat, replay and versioned saves. The UI currently uses a **remote generated MP4**, not a checked-in video asset. Before public release, consider self-hosting/optimizing the clip and verifying licensing/CDN retention. Browser playback on physical phones has not yet been verified.
 - GitHub Actions is the source of TypeScript/tests/production build verification; check the current commit before claiming final CI success.
+
+## 2026-10-26 — Stronger death scare / audiovisual pass
+- First five-second Paper Witness film was too slow and telegraphed; replaced its source with a generated 3-second Kling 3.0 clip designed around a 0.4-second surprise close-up and synchronized sound (generation `67377599-12d8-4695-b5e9-920ff86d77cd`).
+- Video player now shows a dark loading state instead of spoiling the scare with its still portrait; unmuted playback is attempted first, then automatically retries muted if blocked by browser autoplay. An explicit tap-to-unmute control appears when sound is blocked.
+- Added separate persistent SCARE AUDIO ON/OFF toggle, video loading and playback watchdogs, mobile-sized skip control and keyboard focus trap; the existing FX OFF and OS reduced-motion bypass remain.
+- Video still streams from Higgsfield CDN; physical iOS/Android performance, actual audio playback, and user-perceived scare quality require player validation. No changes to seeded engine, saves or endings.
