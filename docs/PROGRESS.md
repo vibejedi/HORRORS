@@ -66,3 +66,9 @@
 2. Verify artwork cropping, touch navigation, combat buttons, save/reload, and accessibility on a hosted preview; update the playthrough record.
 3. Treat generated paintings as **illustration assets**, not frame-by-frame animations or original WOH sprite sheets. Add lightweight sprite strips/animated overlays in a subsequent phase.
 4. Keep WOH binary research private, and obtain appropriate rights before incorporating any protected original assets into a distributed game.
+
+### v0.3 integration verification (after navigation fix)
+- New **Open Next Page** / **Enter Next Area** buttons appear after committed events; read pages now show the chosen branch's actual seeded outcome, so no route requires manually guessing which article to open.
+- Local offline React compatibility harness injected into headless Chromium using `page.set_content` and inline original image data to bypass local navigation restrictions. **Full release-ending walkthrough PASS at 390 × 844, with touch enabled; ordinary fights 2 and 2 rounds, final 3 rounds, ending TOMORROW WALKS FREE, seed 42, 10/10 entries, 3/3 witnesses, 3/3 enemies.** Zero broken images, uncaught JS errors, or horizontal overflow at 390px mobile and 1440px desktop startup.
+- **React 19/Vite production compile PASS** for the initial v0.3 art integration commit `6ec66e537b0462933a677a31c2edd49543408aec` via GitHub Actions run https://github.com/vibejedi/HORRORS/actions/runs/40150396664. The subsequent navigation/choice-result/UI polish patch requires its own CI verification. Test harness is diagnostic React 16, not a substitute for testing the final bundle on phones.
+- Current sprite/artwork status: 9 distinct illustrated files used by the UI + 1 mobile battle concept reference; these are still illustrations, not sprite-sheet animations.

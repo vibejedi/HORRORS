@@ -109,15 +109,22 @@ function App(){
 
   const displayPage=(event:ArchiveEvent)=>{
     const read=Boolean(game?.visited[event.id]);
-    return <article className="content-sheet" key={event.id}>
+    const committedChoice=event.choices.find(c=>c.id===game?.visited[event.id]);
+    const tested=game?.checks.find(c=>c.eventId===event.id);
+    const committedResult=committedChoice?.test?(tested?.passed?committedChoice.test.success.result:committedChoice.test.failure.result):committedChoice?.result;
+    const nextEntry=events.find(e=>!game?.visited[e.id]);
+    const nextArea:LocationId|undefined=game?.location==='index'?'relay':game?.location==='relay'?'vault':undefined;
+    const advance=()=>{if(nextEntry){setCurrentPage(nextEntry.id);} else if(nextArea){navigate(nextArea);}};
+    return <article className="content-sheet" key={event.id} id="active-archive-page">
       <div className="eyebrow">ARCHIVE DOCUMENT <span>//</span> {event.slug.toUpperCase()}</div>
       <div className="title-row"><h1>{event.title}</h1>{read&&<span className="tag committed">COMMITTED</span>}</div>
       <p className="lead">{event.excerpt}</p>
       <ArchiveIllustration src={EVENT_ARTWORK[event.id]??ARTWORK.locations[event.location]} alt={IMAGE_LABELS[event.encounter??event.location]??event.title} caption={`FILE / ${event.id.toUpperCase()}`}/>
       <details className="ascii-disclosure"><summary>VIEW ORIGINAL ASCII RECORD</summary><SceneArt text={event.art} caption="[ mirrored in plain text ]"/></details>
-      <div className="document-block"><span className="block-label">RECOVERED TEXT</span><p>{event.body}</p></div>{read && game?.checks.find(check=>check.eventId===event.id) && (()=>{const check=game.checks.find(check=>check.eventId===event.id)!;return <div className={`check-result ${check.passed?'passed':'failed'}`}><strong>{check.passed?'✓ TEST PASSED':'× TEST FAILED'}</strong><span>{check.attribute.toUpperCase()} // D6 {check.roll} + {check.modifier} = {check.roll+check.modifier} / TARGET {check.target}</span></div>;})()}
+      <div className="document-block"><span className="block-label">RECOVERED TEXT</span><p>{event.body}</p></div>{read&&committedResult&&<div className="committed-outcome"><span className="block-label">YOUR COMMITTED REVISION</span><strong>{committedChoice?.text}</strong><p>{committedResult}</p></div>}{read && game?.checks.find(check=>check.eventId===event.id) && (()=>{const check=game.checks.find(check=>check.eventId===event.id)!;return <div className={`check-result ${check.passed?'passed':'failed'}`}><strong>{check.passed?'✓ TEST PASSED':'× TEST FAILED'}</strong><span>{check.attribute.toUpperCase()} // D6 {check.roll} + {check.modifier} = {check.roll+check.modifier} / TARGET {check.target}</span></div>;})()}
       {event.witness&&read&&<div className="inline-note">◈ WITNESS REGISTERED: {WITNESS_OPTIONS.find(w=>w.id===event.witness)?.name.toUpperCase()}</div>}
       {!read && game?.phase==='archive'?<div className="choices"><div className="eyebrow">CHOOSE A REVISION <span>//</span> NO UNDO</div>{event.choices.map((c,i)=><button className="choice" key={c.id} onClick={()=>act({type:'choose',eventId:event.id,choiceId:c.id})}><span className="choice-letter">{String(i+1).padStart(2,'0')}</span><span className="choice-info"><strong>{c.text}</strong>{c.test&&<small>{c.test.attribute.toUpperCase()} CHECK · D6 + {game.attributes[c.test.attribute]} ≥ {c.test.target} · {Math.round(skillChance(game.attributes[c.test.attribute],c.test.target)*100)}% SUCCESS</small>}</span><span className="arrow">↗</span></button>)}</div>:<div className="read-state">{read?'✓ Entry committed to your personal history. Return to the index for more pages.':'This entry is not currently writable.'}</div>}
+      {read&&game?.phase==='archive'&&((nextEntry)||(nextArea&&canTravel(game,nextArea)))&&<button className="next-file" onClick={advance}>{nextEntry?`OPEN NEXT PAGE / ${nextEntry.slug}`:`ENTER ${LOCATIONS[nextArea!].name.toUpperCase()}`} <span>↗</span></button>}
     </article>;
   };
   const Fight=()=>{

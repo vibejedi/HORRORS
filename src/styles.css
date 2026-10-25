@@ -132,3 +132,14 @@ body{background:#080909}
 }
 @media(max-width:390px){.character-portrait{height:130px}.battle-stage>.illustration>img{height:140px}.move{padding:9px;min-height:82px}.move .move-glyph{font-size:16px}.move strong{font-size:10px}.move small{font-size:9px}.launch-actions{flex-direction:row}.launch-actions button{width:auto}.launch-actions .primary{min-width:0;flex:1}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+.committed-outcome{margin:16px 0;padding:16px 20px;background:#232622;border-left:3px solid #dbddd3}
+.committed-outcome>strong{display:block;font-size:14px;color:#eaeae3;margin-top:9px}
+.committed-outcome>p{font-size:13px;color:#b9c1b5;margin:8px 0 0}
+.next-file{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;min-height:56px;background:#dddcd4;color:#0c0c0b;border:2px solid #f2f2eb;text-align:left;padding:15px 19px;font:12px 'DM Mono',monospace;letter-spacing:.3px;margin:20px 0 0;font-weight:600}
+.next-file:hover{background:#fff}
+.next-file span{font-size:18px}
+@media(max-width:760px){
+ .content-sheet>.illustration>img{max-height:178px;object-position:center 23%}
+ .illustration-compact>img{max-height:155px}
+ .next-file{min-height:58px;position:sticky;bottom:8px;z-index:4;box-shadow:0 4px 15px #0008}
+}

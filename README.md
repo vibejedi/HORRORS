@@ -44,3 +44,5 @@ A separate downloadable `terminal-of-horrors-debug-preview.zip` contains a test 
 The browser game now includes original generated art for two investigators, three locations, two normal enemies, the final entity, and the archive cover. All images are optimized WebP files mapped by `src/game/art.ts` and rendered with responsive HTML/CSS UI and original ASCII records. The gameplay is implemented in `src/game/engine.ts`, not in the illustrations.
 
 Run `npm run check` (11 tests and production compile), then `npm run dev` for local play. Open the network-reachable Vite host on a phone to test touch controls. The purchased WORLD OF HORROR game files are **not** a dependency and are **not** shipped. `npm`/Vite build verification for this particular art integration must be confirmed in CI.
+
+The illustrated v0.3 test case also includes a direct next-page control and a visible committed-choice result. Verified at 390px (touch) and 1440px through the diagnostic browser harness. React 19/Vite build passed in GitHub Actions for the initial illustrated commit; later polish must be revalidated by CI.
