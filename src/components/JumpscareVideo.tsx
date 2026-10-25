@@ -40,7 +40,7 @@ export function JumpscareVideo({clip,preview,title,detail,poster,onComplete}:Pro
   });
   return <div className="video-scare" role="alertdialog" aria-modal="true" aria-label={preview?'Jumpscare preview':'Fatal archive transmission'}>
     {!fallback && <video ref={videoRef} className="video-scare__movie" playsInline preload="auto" muted autoPlay disablePictureInPicture poster={poster} onPlaying={()=>setHasVideo(true)} onEnded={complete} onError={()=>setFallback(true)}>
-      <source src={clip.webm} type="video/webm"/><source src={clip.mp4} type="video/mp4"/>
+      {clip.webm && <source src={clip.webm} type="video/webm"/>}<source src={clip.mp4} type="video/mp4"/>
     </video>}
     {(fallback||!hasVideo)&&<div className="video-scare__still" aria-hidden="true"><img src={poster} alt=""/><span className="video-scare__static"/></div>}
     {fallback&&<div className="video-scare__caption"><strong>{title}</strong><p>{detail}</p></div>}
