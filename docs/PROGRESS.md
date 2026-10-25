@@ -78,3 +78,12 @@
 - Downloaded the actual compiled React 19/Vite bundle and injected its shipped JS and CSS into headless Chromium (via `page.set_content` to work around local navigation policy). All ten shipped WebP art assets were resolved in memory for the test; bundled Google Fonts import was excluded from injection only.
 - **Actual production JS mobile touch playthrough PASS** at 390 × 844, seed 42: all ten branching events, three witnesses, three fights in 2/2/3 rounds, the release pact, ending **TOMORROW WALKS FREE**. Desktop startup at 1440 × 900 also PASS. Both layouts: zero broken images, zero uncaught JavaScript errors, zero horizontal overflow.
 - Live hosted-preview URL, real-device iOS/Android touch testing, long-running save/reload across a hosted origin, asset animation and broader balance remain next milestones.
+
+
+## 2026-10-25 — Animation & jumpscare sprint (v0.4)
+
+- Implemented CSS/React presentation-only motion: page transitions, ambient motes/scanlines, location scene parallax, animated portraits/enemies, intent glow, tactical button presses, floating combat feedback, skill-check outcome stamps, and a fatal transmission overlay.
+- Losses caused by 0 vitality, 0 coherence or trace 10 show distinct cinematic jumpscare captions and enemy portraits, then return to the existing incident report. The seeded rules and version 2 saves are unchanged.
+- Added FX ON/OFF toggle persisted in separate localStorage key, OS reduced-motion support, no automatic sound or flashing; the loss cue can be skipped immediately. Landing page offers a visual-only preview to inspect the animation without changing the run.
+- Added 3 tests for presentation cue mappings, actual fatal state transitions, and identical deterministic replays. `node --experimental-strip-types --test tests/*.test.ts`: 14 passing locally.
+- **Build status:** Pending GitHub Actions production `npm run check` for this commit; local sandbox has no cached npm dependencies. Production browser/touch confirmation is still required after CI.

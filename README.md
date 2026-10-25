@@ -46,3 +46,14 @@ The browser game now includes original generated art for two investigators, thre
 Run `npm run check` (11 tests and production compile), then `npm run dev` for local play. Open the network-reachable Vite host on a phone to test touch controls. The purchased WORLD OF HORROR game files are **not** a dependency and are **not** shipped. `npm`/Vite build verification for this particular art integration must be confirmed in CI.
 
 The illustrated v0.3 test case also includes a direct next-page control and a visible committed-choice result. Verified at 390px (touch) and 1440px through the diagnostic browser harness. React 19/Vite build passed in GitHub Actions for the initial illustrated commit; later polish must be revalidated by CI.
+
+
+## Animated v0.4 / fatal transmission sprint
+
+**CSS/React-only motion:** Page materialization, drifting data motes, CRT scanline drift, location parallax/light sweeps, character breathing, enemy idle glitches, telegraphed intentions, combat impact and floating damage readouts, tactile action-queue feedback, and committed/failed skill-check stamps. All overlays are presentation-only; they never change the seeded simulation, replay, or save format.
+
+**Jumpscare on genuine death/failure:** Transitions to `unmade` (zero vitality), `dissolved` (zero coherence), or `located` (trace 10) reveal a sudden archive-monster lunge and fatal message for about 1.85 seconds before the ordinary incident report. Can be skipped by tapping, pressing Escape/Enter/Space, or pressing **VIEW INCIDENT REPORT**. The setup screen has a **PREVIEW JUMPSCARE / VISUAL ONLY** control which does not change the game.
+
+**Comfort & accessibility:** The `FX ON/OFF` toggle remains available above the game and persists locally. With FX off, the jump cut and ambient animations are disabled; operating-system `prefers-reduced-motion` disables them automatically as well. No flashing/strobe loop or autoplay audio. Images and interactive buttons remain independent of animation timing. Losses are determined **only** by the original `reduceGame` logic.
+
+**Verification:** `npm run check` and GitHub Actions are the production gates. Run a fatal-path test by starting with investigator Ilya, entering relay combat, and repeatedly defending until one of vitality/coherence/trace thresholds is reached, or use the safe preview control to inspect the animation instantly. Use Chrome device emulation at 390px and a physical phone on the local Vite Network URL. See `docs/PROGRESS.md`.

@@ -1,4 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
+import { describeMoment, fatalCue, isNewFatality } from './animation/effects.ts';
+import type { FatalEnding, Moment } from './animation/effects.ts';
+import { useMotionPreference } from './animation/useMotionPreference.ts';
 import { ART, ENEMIES, EVENTS, INVESTIGATORS, ITEMS, LOCATIONS } from './game/content.ts';
 import { availableEvents, canTravel, getQueueCost, MOVE_COST, QUEUE_BUDGET, skillChance, intentionalEnemyMove, newGame, reduceGame, replay, score } from './game/engine.ts';
 import { clearRun, loadRun, loadScores, persistRun, storeScore } from './game/storage.ts';
@@ -45,6 +48,10 @@ function ArchiveIllustration({src,alt,caption,compact=false}:{src:string;alt:str
     <figcaption><span>◈ ARCHIVE / IMAGE ATTACHMENT</span><span>{caption}</span></figcaption>
   </figure>;
 }
+const HORROR_SETTING = 'terminal-of-horrors/horror-fx/v1';
+function readHorrorSetting(): boolean {
+  try { return window.localStorage.getItem(HORROR_SETTING) !== 'off'; } catch { return true; }
+}
 function App(){
   const [savedAtStart] = useState(()=>loadRun());
   const [game,setGame]=useState<GameState|null>(savedAtStart);
@@ -59,6 +66,20 @@ function App(){
   const [memory,setMemory]=useState<MemoryId>('name');
   const [fate,setFate]=useState<FateId>('delete');
   const [copied,setCopied]=useState(false);
+  const [horrorEnabled,setHorrorEnabled]=useState(readHorrorSetting);
+  const reduceMotion=useMotionPreference();
+  const canAnimate=horrorEnabled&&!reduceMotion;
+  const [moment,setMoment]=useState<Moment|null>(null);
+  const [fatal,setFatal]=useState<{id:number;ending:FatalEnding;preview?:boolean}|null>(null);
+  const [scenePulse,setScenePulse]=useState(0);
+  const [momentCounter,setMomentCounter]=useState(0);
+  const [lastCue,setLastCue]=useState('');
+
+  useEffect(()=>{try{window.localStorage.setItem(HORROR_SETTING,horrorEnabled?'on':'off');}catch{/* private browsing */}},[horrorEnabled]);
+  useEffect(()=>{if(!canAnimate){setFatal(null);setMoment(null);}},[canAnimate]);
+  useEffect(()=>{if(!moment)return;const timeout=window.setTimeout(()=>setMoment(null),1000);return ()=>window.clearTimeout(timeout);},[moment]);
+  useEffect(()=>{if(!fatal)return;const timeout=window.setTimeout(()=>setFatal(null),1850);return ()=>window.clearTimeout(timeout);},[fatal]);
+  useEffect(()=>{if(!fatal)return;const onKey=(e:KeyboardEvent)=>{if(e.key==='Escape'||e.key==='Enter'||e.key===' '){e.preventDefault();setFatal(null);}};window.addEventListener('keydown',onKey);return ()=>window.removeEventListener('keydown',onKey);},[fatal]);
 
   useEffect(()=>{if(game){persistRun(game);if(game.phase==='ended')setScores(storeScore(game));}},[game]);
   const events=useMemo(()=>game?availableEvents(game):[],[game]);
@@ -69,6 +90,15 @@ function App(){
     try{
       const next=reduceGame(game,action);
       setGame(next);setError('');
+      const newCue = describeMoment(game,next,action,momentCounter+1);
+      if(canAnimate && isNewFatality(game,next) && next.ending){
+        setFatal({id:momentCounter+1,ending:next.ending as FatalEnding});
+        setMoment(null);
+      } else if(canAnimate && newCue){setMoment(newCue);}
+      if(newCue || isNewFatality(game,next))setMomentCounter(n=>n+1);
+      if(newCue?.kind==='failed-test')setLastCue(newCue.detail);
+      if(action.type==='travel'||(action.type==='choose'&&next.phase!=='combat'))setScenePulse(n=>n+1);
+      if(next.phase==='combat'&&game.phase!=='combat')setScenePulse(n=>n+1);
       if(action.type==='travel'){
         const dest=EVENTS.find(e=>e.location===action.to&&!next.visited[e.id]);
         setCurrentPage(dest?.id??EVENTS.find(e=>e.location===action.to)?.id??'arrival');
@@ -80,11 +110,11 @@ function App(){
   const begin=()=>{
     const n=Number(seedInput);
     if(!Number.isInteger(n)||n<0||n>0xffffffff){setError('Seed must be a whole number from 0 to 4294967295.');return;}
-    setGame(newGame(n,investigator));setCurrentPage('arrival');setPanel('pages');setError('');setDrawer(false);
+    setFatal(null);setMoment(null);setScenePulse(n=>n+1);setGame(newGame(n,investigator));setCurrentPage('arrival');setPanel('pages');setError('');setDrawer(false);
   };
   const restart=()=>{
     if(game){setSeedInput(String(game.seed));setInvestigator(game.investigator);}
-    clearRun();setGame(null);setError('');setPanel('pages');setDrawer(false);
+    setFatal(null);setMoment(null);clearRun();setGame(null);setError('');setPanel('pages');setDrawer(false);
   };
   const navigate=(to:LocationId)=>{
     if(game?.phase==='archive'&&game.location!==to&&canTravel(game,to))act({type:'travel',to});
@@ -104,7 +134,7 @@ function App(){
     <button className={`nav-link ${panel==='inventory'?'active':''}`} disabled={!game} onClick={()=>{setPanel('inventory');setDrawer(false);}}>relics / inventory <span>{game?.inventory.length??'—'}</span></button>
     <button className={`nav-link ${panel==='log'?'active':''}`} disabled={!game} onClick={()=>{setPanel('log');setDrawer(false);}}>transmissions / log <span>{game?.turn??'—'}</span></button>
     <button className={`nav-link ${panel==='scores'?'active':''}`} onClick={()=>{setPanel('scores');setDrawer(false);}}>incident reports <span>↗</span></button>
-    <div className="sidebar-bottom"><span className="pulse"/> <span>ghostnet / local-only</span><span>v0.3.0 / ILLUSTRATED</span></div>
+    <div className="sidebar-bottom"><span className="pulse"/> <span>ghostnet / local-only</span><span>v0.4.0 / ANIMATED</span></div>
   </aside>;
 
   const displayPage=(event:ArchiveEvent)=>{
@@ -115,7 +145,7 @@ function App(){
     const nextEntry=events.find(e=>!game?.visited[e.id]);
     const nextArea:LocationId|undefined=game?.location==='index'?'relay':game?.location==='relay'?'vault':undefined;
     const advance=()=>{if(nextEntry){setCurrentPage(nextEntry.id);} else if(nextArea){navigate(nextArea);}};
-    return <article className="content-sheet" key={event.id} id="active-archive-page">
+    return <article className="content-sheet animated-page" key={event.id} id="active-archive-page">
       <div className="eyebrow">ARCHIVE DOCUMENT <span>//</span> {event.slug.toUpperCase()}</div>
       <div className="title-row"><h1>{event.title}</h1>{read&&<span className="tag committed">COMMITTED</span>}</div>
       <p className="lead">{event.excerpt}</p>
@@ -138,11 +168,12 @@ function App(){
       {move:'seal',name:'SEAL',detail:'1 time · −3 trace',glyph:'◉',disabled:game.inventory.filter(x=>x==='seal').length<=battle.pendingMoves.filter(x=>x==='seal').length},
       {move:'flee',name:'RUN',detail:'4 time · 50% escape chance',glyph:'↗',disabled:battle.enemy==='author'||battle.pendingMoves.length>0},
     ];
-    return <article className="content-sheet combat-sheet">
+    return <article className={`content-sheet combat-sheet animated-page ${moment && ['strike','decode','victory'].includes(moment.kind)?'impact-active':''}`} key={`combat-${battle.enemy}`}>
       <div className="eyebrow danger-text">! HOSTILE CONVERSATION // ROUND {battle.round} / FILE {battle.enemy.toUpperCase()}</div>
       <h1>{enemy.name}</h1><p className="lead">{enemy.flavor}</p>
-      <div className="battle-stage">
-        <ArchiveIllustration src={ARTWORK.enemies[battle.enemy]} alt={`${enemy.name}, an original archive horror creature`} caption="HOSTILE / IMAGE RECORD"/>
+      <div className="battle-stage" key={`arena-${battle.enemy}`}>
+        {moment && ['strike','decode','guard','recovery','victory'].includes(moment.kind) && <div key={moment.id} className={`battle-moment fx-${moment.kind}`} aria-live="polite" role="status"><strong>{moment.label}</strong><small>{moment.detail}</small></div>}
+        <div className="enemy-figure"><ArchiveIllustration src={ARTWORK.enemies[battle.enemy]} alt={`${enemy.name}, an original archive horror creature`} caption="HOSTILE / IMAGE RECORD"/><span className="enemy-static" aria-hidden="true"/></div>
         <div className="battle-tactics">
           <div className="combat-hp"><span>HOSTILE INTEGRITY</span><b>{battle.health}/{enemy.maxHealth}</b><div className="meter-track"><div className="meter-fill hostile-fill" style={{width:`${battle.health/enemy.maxHealth*100}%`}}/></div></div>
           <div className="intent-box" role="status"><span className="block-label">! NEXT ENEMY ACTION / VISIBLE INTENT</span><strong>{intentionalEnemyMove(game)}</strong><small>The enemy acts once after you launch your sequence. Defend to soften the blow.</small></div>
@@ -163,7 +194,7 @@ function App(){
     <div className="ritual-stage"><div className="eyebrow">03 / THE ENTITY'S FATE</div><div className="ritual-options">{FATE_OPTIONS.map(f=><button key={f.id} className={`ritual-opt ${fate===f.id?'selected':''}`} onClick={()=>setFate(f.id)}><strong>{f.name}</strong><small>{f.detail}</small></button>)}</div></div>
     <button className="primary wide" onClick={()=>act({type:'beginRitual',ritual:{witness,memory,fate}})}>SIGN THE PACT → ENTER FINAL ENCOUNTER</button>
   </article>;
-  const EndingPage=()=>game&&game.ending&&<article className="content-sheet"><div className="eyebrow">INCIDENT REPORT // CLOSED</div><h1>{ENDINGS[game.ending]?.name??'ARCHIVE CLOSED'}</h1><p className="lead">{ENDINGS[game.ending]?.meaning}</p><SceneArt text={String.raw`  +-----------------------------+
+  const EndingPage=()=>game&&game.ending&&<article className="content-sheet animated-page ending-sheet"><div className="eyebrow">INCIDENT REPORT // CLOSED</div><h1>{ENDINGS[game.ending]?.name??'ARCHIVE CLOSED'}</h1><p className="lead">{ENDINGS[game.ending]?.meaning}</p><SceneArt text={String.raw`  +-----------------------------+
   |    TERMINAL   /   CLOSED   |
   |                             |
   |  WITNESSES: ${String(game.witnesses.length).padEnd(2)}              |
@@ -179,17 +210,25 @@ function App(){
   const JournalPage=()=>game&&<article className="content-sheet"><div className="eyebrow">TRANSMISSIONS / REPLAYABLE HISTORY</div><h1>Every action leaves a signature.</h1><p className="lead">Seed {game.seed}. The same investigator, seed, and ordered actions reconstruct the same state.</p><div className="action-row"><button className="secondary" onClick={copyLog}>{copied?'COPIED ✓':'COPY REPLAY JSON'}</button><button className="secondary" onClick={()=>{try{const r=replay(game.seed,game.investigator,game.actions);setError(JSON.stringify(r)===JSON.stringify(game)?'Replay verified: exact state match.':'Replay mismatch detected.');}catch(e){setError(String(e));}}}>VERIFY REPLAY</button></div><ol className="journal">{game.journal.length?game.journal.slice().reverse().map(x=><li key={x.n}><span>#{String(x.n).padStart(3,'0')}</span><div>{x.line}<small>V {x.after.vitality} · C {x.after.coherence} · T {x.after.trace} · {x.after.phase}</small></div></li>):<li>NO ACTIONS RECORDED YET</li>}</ol></article>;
   const ScoresPage=()=> <article className="content-sheet"><div className="eyebrow">LOCAL ARCHIVE / PERSONAL RECORDS</div><h1>Incident reports.</h1><p className="lead">Scores from this device only. There is no shared leaderboard or crypto payout.</p><div className="score-table" role="table" aria-label="Local score history"><div className="score-row score-head" role="row"><span>RANK</span><span>INVESTIGATOR</span><span>OUTCOME</span><span>SCORE</span></div>{scores.length?scores.map((x,i)=><div key={x.id} className="score-row" role="row"><span>{String(i+1).padStart(2,'0')}</span><span>{INVESTIGATORS[x.investigator]?.name??x.investigator}<small>{x.turns} actions · seed {x.seed}</small></span><span>{x.ending}</span><strong>{x.score}</strong></div>):<p className="empty-state">No incident reports have been filed. Your first ending will appear here.</p>}</div></article>;
 
-  return <div className="app-shell">
+  const jump = fatal?fatalCue(fatal.ending):null;
+  return <div className={`app-shell ${canAnimate?'motion-live':'motion-quiet'}`}>
+    <div className="archive-noise" aria-hidden="true"/><div className="archive-dust" aria-hidden="true">{Array.from({length:7},(_,i)=><i key={i}/>)}</div>
+    {jump && fatal && <div className="fatal-overlay" role="alertdialog" aria-modal="true" aria-label="Fatal archive transmission" key={fatal.id} onClick={()=>setFatal(null)}>
+      <div className="fatal-halo" aria-hidden="true"/><img src={ARTWORK.enemies[jump.art]} alt="" aria-hidden="true" className="fatal-monster"/>
+      <div className="fatal-caption"><span className="fatal-meta">/ ERROR 0x000 / THERE IS SOMETHING BEHIND THE PAGE /</span><strong>{jump.title}</strong><p>{jump.detail}</p><button onClick={(event)=>{event.stopPropagation();setFatal(null);}}>{fatal.preview?'RETURN TO ARCHIVE':'VIEW INCIDENT REPORT ↗'}</button></div>
+    </div>}
+    <div className="screen-reader-only" aria-live="polite">{lastCue}</div>
     <div className="mobile-bar"><button className="menu-toggle" onClick={()=>setDrawer(!drawer)} aria-label={drawer?'Close navigation':'Open navigation'} aria-expanded={drawer}>{drawer?'×':'☰'}</button><span>TERMINAL / OF HORRORS</span><span className="online-indicator">● LOCAL</span></div>
     <div className={`nav-overlay ${drawer?'visible':''}`} onClick={()=>setDrawer(false)}/><div className={`nav-container ${drawer?'open':''}`}>{Sidebar()}</div>
-    <main className="workspace"><header className="topline"><span>ROOT / {game?LOCATIONS[game.location].slug:'START'}</span><span>{game?`SEED ${game.seed} · ${game.phase.toUpperCase()}`:'UNREGISTERED READER'}</span></header>
-      {!game?<div className="setup-view"><div className="intro-grid"><div className="intro-text"><div className="intro-mark">CASE 001 <span>✳</span> INDEXED: TOMORROW</div><h1 className="hero-title">A PERSONAL WIKI<br/><em>THAT IS</em><br/>READING YOU<span className="blink">_</span></h1><p className="setup-copy">THE PAGE THAT REMEMBERS TOMORROW. You enter an abandoned machine intelligence. Its newest document already knows what you will do next.</p><div className="intro-terminal">&gt; USER DETECTED<br/>&gt; AUTHOR: NOT YET CREATED<br/>&gt; EVENT LOG: TOMORROW<br/><span>_</span></div></div><ArchiveIllustration src={ARTWORK.cover} alt="Terminal of Horrors: a haunted black and white AI archive" caption="CASE 001 / FRONTISPIECE"/></div><div className="eyebrow">SELECT AN INVESTIGATOR</div><div className="character-grid">{(Object.keys(INVESTIGATORS) as InvestigatorId[]).map(id=>{const c=INVESTIGATORS[id];return <button key={id} className={`character-card ${investigator===id?'selected':''}`} onClick={()=>setInvestigator(id)} aria-pressed={investigator===id}><img src={ARTWORK.investigators[id]} alt={`${c.name}, ${c.role}`} loading="eager" className="character-portrait"/><span className="character-index">0{id==='mara'?'1':'2'} / {c.role}</span><strong>{c.name}</strong><p>{c.epitaph}</p><small>{c.perk}</small><div className="investigator-attributes">PER {c.attributes.perception} · KNO {c.attributes.knowledge} · NRV {c.attributes.nerve}</div></button>;})}</div><label className="seed-label" htmlFor="seed">ARCHIVE SEED / REPRODUCIBLE RUN</label><input id="seed" type="number" min="0" max="4294967295" step="1" value={seedInput} onChange={(e:{target:{value:string}})=>setSeedInput(e.target.value)} /><button className="primary start-btn" onClick={begin}>ENTER THE ARCHIVE <span>↗</span></button><p className="disclaimer">ORIGINAL FICTION · NO WALLET REQUIRED · SAVED LOCALLY</p>{savedAtStart&&<p className="muted">Previous save restored automatically when available.</p>}</div>:
+    <main className="workspace"><header className="topline"><span>ROOT / {game?LOCATIONS[game.location].slug:'START'}</span><div className="topline-actions"><span>{game?`SEED ${game.seed} · ${game.phase.toUpperCase()}`:'UNREGISTERED READER'}</span><button className="horror-toggle" aria-pressed={horrorEnabled} aria-label={`Animated horror effects ${horrorEnabled?'enabled':'disabled'}`} onClick={()=>setHorrorEnabled(enabled=>!enabled)}>FX {horrorEnabled?'ON':'OFF'}{reduceMotion?' / SYSTEM REDUCED MOTION':''}</button></div></header>
+      {!game?<div className="setup-view animated-page"><div className="intro-grid"><div className="intro-text"><div className="intro-mark">CASE 001 <span>✳</span> INDEXED: TOMORROW</div><h1 className="hero-title">A PERSONAL WIKI<br/><em>THAT IS</em><br/>READING YOU<span className="blink">_</span></h1><p className="setup-copy">THE PAGE THAT REMEMBERS TOMORROW. You enter an abandoned machine intelligence. Its newest document already knows what you will do next.</p><div className="intro-terminal">&gt; USER DETECTED<br/>&gt; AUTHOR: NOT YET CREATED<br/>&gt; EVENT LOG: TOMORROW<br/><span>_</span></div></div><ArchiveIllustration src={ARTWORK.cover} alt="Terminal of Horrors: a haunted black and white AI archive" caption="CASE 001 / FRONTISPIECE"/></div><div className="eyebrow">SELECT AN INVESTIGATOR</div><div className="character-grid">{(Object.keys(INVESTIGATORS) as InvestigatorId[]).map(id=>{const c=INVESTIGATORS[id];return <button key={id} className={`character-card ${investigator===id?'selected':''}`} onClick={()=>setInvestigator(id)} aria-pressed={investigator===id}><img src={ARTWORK.investigators[id]} alt={`${c.name}, ${c.role}`} loading="eager" className="character-portrait"/><span className="character-index">0{id==='mara'?'1':'2'} / {c.role}</span><strong>{c.name}</strong><p>{c.epitaph}</p><small>{c.perk}</small><div className="investigator-attributes">PER {c.attributes.perception} · KNO {c.attributes.knowledge} · NRV {c.attributes.nerve}</div></button>;})}</div><label className="seed-label" htmlFor="seed">ARCHIVE SEED / REPRODUCIBLE RUN</label><input id="seed" type="number" min="0" max="4294967295" step="1" value={seedInput} onChange={(e:{target:{value:string}})=>setSeedInput(e.target.value)} /><button className="primary start-btn" onClick={begin}>ENTER THE ARCHIVE <span>↗</span></button><p className="disclaimer">ORIGINAL FICTION · NO WALLET REQUIRED · SAVED LOCALLY</p><div className="fx-test-row"><span>ON FAILURE, THE ARCHIVE MAY REACH OUT. NO FLASHING OR AUTOMATIC AUDIO.</span><button type="button" disabled={!canAnimate} className="secondary fx-preview" onClick={()=>setFatal({id:momentCounter+1,ending:'located',preview:true})}>PREVIEW JUMPSCARE / VISUAL ONLY</button></div>{savedAtStart&&<p className="muted">Previous save restored automatically when available.</p>}</div>:
       <div className="play-container"><div className="mobile-stats" aria-label="Current investigator statistics"><span>VITALITY <b>{game.stats.vitality}/{game.stats.maxVitality}</b></span><span>COHERENCE <b>{game.stats.coherence}/{game.stats.maxCoherence}</b></span><span>TRACE <b>{game.stats.trace}/10</b></span></div><div className="play-layout"><section className="main-column">
+        {moment && ['page','failed-test'].includes(moment.kind) && <div key={moment.id} className={`revision-moment fx-${moment.kind}`} role="status"><strong>{moment.label}</strong><span>{moment.detail}</span></div>}
         {game.phase==='combat'?Fight():game.phase==='ritual'?RitualPage():game.phase==='ended'&&panel==='pages'?<EndingPage/>:panel==='inventory'?<InventoryPage/>:panel==='log'?<JournalPage/>:panel==='scores'?<ScoresPage/>:
-        <><div className="location-header"><span>{LOCATIONS[game.location].depth}</span><h2>{LOCATIONS[game.location].name}</h2><p>{LOCATIONS[game.location].blurb}</p><ArchiveIllustration src={ARTWORK.locations[game.location]} alt={`${LOCATIONS[game.location].name}, an impossible haunted AI archive location`} caption={`LOCATION / ${game.location.toUpperCase()}`} compact/><details className="ascii-disclosure location-ascii"><summary>ASCII SCHEMATIC</summary><SceneArt text={ART[game.location]}/></details></div><div className="page-index"><div className="eyebrow">INVESTIGATION PROGRESS / {Object.keys(game.visited).length} OF {EVENTS.length} ENTRIES · {unvisited} UNREAD</div><div className="progress-track"><div style={{width:`${100*Object.keys(game.visited).length/EVENTS.length}%`}}/></div><div className="page-links">{events.map(e=><button className={`page-chip ${selected?.id===e.id?'selected':''} ${game.visited[e.id]?'read':''}`} key={e.id} onClick={()=>setCurrentPage(e.id)}><span>{game.visited[e.id]?'✓':'□'}</span> {e.slug}</button>)}</div></div>{selected?displayPage(selected):<p className="empty-state">The next page has not been indexed yet.</p>}</>}
+        <><div className="location-header" key={`location-${game.location}-${scenePulse}`}><span>{LOCATIONS[game.location].depth}</span><h2>{LOCATIONS[game.location].name}</h2><p>{LOCATIONS[game.location].blurb}</p><ArchiveIllustration src={ARTWORK.locations[game.location]} alt={`${LOCATIONS[game.location].name}, an impossible haunted AI archive location`} caption={`LOCATION / ${game.location.toUpperCase()}`} compact/><details className="ascii-disclosure location-ascii"><summary>ASCII SCHEMATIC</summary><SceneArt text={ART[game.location]}/></details></div><div className="page-index"><div className="eyebrow">INVESTIGATION PROGRESS / {Object.keys(game.visited).length} OF {EVENTS.length} ENTRIES · {unvisited} UNREAD</div><div className="progress-track"><div style={{width:`${100*Object.keys(game.visited).length/EVENTS.length}%`}}/></div><div className="page-links">{events.map(e=><button className={`page-chip ${selected?.id===e.id?'selected':''} ${game.visited[e.id]?'read':''}`} key={e.id} onClick={()=>setCurrentPage(e.id)}><span>{game.visited[e.id]?'✓':'□'}</span> {e.slug}</button>)}</div></div>{selected?displayPage(selected):<p className="empty-state">The next page has not been indexed yet.</p>}</>}
         {error&&<div className="error-box" role="status">{error}<button onClick={()=>setError('')} aria-label="Dismiss message">×</button></div>}
       </section><aside className="status-column"><div className="stat-card"><div className="eyebrow">READING SESSION / {game.investigator.toUpperCase()}</div><h3>{INVESTIGATORS[game.investigator].name}</h3><img className="status-portrait" src={ARTWORK.investigators[game.investigator]} alt={`${INVESTIGATORS[game.investigator].name} portrait`}/><StatBar label="VITALITY" value={game.stats.vitality} max={game.stats.maxVitality}/><StatBar label="COHERENCE" value={game.stats.coherence} max={game.stats.maxCoherence}/><StatBar label="TRACE" value={game.stats.trace} max={10} danger/><p className="meter-help">At 0 vitality, 0 coherence, or 10 trace, this run ends.</p></div>
-        <div className="stat-card small-card"><div className="eyebrow">LAST TRANSMISSION</div><p className="transmission">{game.message}</p><div className="small-meta">REVISION #{String(game.turn).padStart(3,'0')}</div></div>
+        <div className="stat-card small-card transmission-card"><div className="eyebrow">LAST TRANSMISSION</div><p className="transmission">{game.message}</p><div className="small-meta">REVISION #{String(game.turn).padStart(3,'0')}</div></div>
         <div className="stat-card small-card"><div className="eyebrow">CASE STATUS</div><div className="case-row"><span>Witnesses</span><strong>{game.witnesses.length}/3</strong></div><div className="case-row"><span>Hostiles</span><strong>{game.cleared.length}/3</strong></div><div className="case-row"><span>Documents</span><strong>{Object.keys(game.visited).length}/10</strong></div><div className="case-row"><span>Skill checks</span><strong>{game.checks.filter(c=>c.passed).length}/{game.checks.length} passed</strong></div><div className="case-row"><span>Score</span><strong>{score(game)}</strong></div><div className="attr-summary"><span>PER {game.attributes.perception}</span><span>KNO {game.attributes.knowledge}</span><span>NRV {game.attributes.nerve}</span></div></div>
         {game.phase==='archive'&&game.witnesses.length>0&&<button className="disconnect" onClick={()=>act({type:'disconnect'})}>⏻ DISCONNECT / ESCAPE RUN</button>}
         <button className="reset-link" onClick={()=>{if(window.confirm('End this run and begin a new investigation?'))restart();}}>↻ RESTART NEW RUN</button>

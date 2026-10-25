@@ -143,3 +143,96 @@ body{background:#080909}
  .illustration-compact>img{max-height:155px}
  .next-file{min-height:58px;position:sticky;bottom:8px;z-index:4;box-shadow:0 4px 15px #0008}
 }
+
+/* CASE 001 / MOTION LANGUAGE: tactile, intimate, readable on touch screens. */
+.app-shell{isolation:isolate}
+.archive-noise{position:fixed;inset:0;z-index:8;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(230,232,215,.065) 4px,transparent 5px);opacity:.24;mix-blend-mode:screen;animation:scan-drift 11s linear infinite}
+.archive-dust{position:fixed;inset:0;z-index:7;pointer-events:none;overflow:hidden}
+.archive-dust i{position:absolute;display:block;width:2px;height:19px;background:linear-gradient(transparent,#ecefe0aa,transparent);filter:blur(.3px);opacity:0;animation:dust-fall 13s linear infinite}
+.archive-dust i:nth-child(1){left:8%;animation-delay:-2s;animation-duration:18s}.archive-dust i:nth-child(2){left:24%;animation-delay:-12s;animation-duration:23s}.archive-dust i:nth-child(3){left:37%;animation-delay:-5s;animation-duration:20s}.archive-dust i:nth-child(4){left:54%;animation-delay:-15s;animation-duration:17s}.archive-dust i:nth-child(5){left:70%;animation-delay:-8s;animation-duration:22s}.archive-dust i:nth-child(6){left:81%;animation-delay:-4s;animation-duration:19s}.archive-dust i:nth-child(7){left:94%;animation-delay:-13s;animation-duration:25s}
+.animated-page{animation:page-materialize .42s cubic-bezier(.18,.75,.31,1) both;transform-origin:top center}
+.location-header{animation:page-materialize .45s ease-out both}
+.location-header .illustration{overflow:hidden;position:relative}
+.location-header .illustration:after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,transparent 31%,rgba(240,246,232,.09) 49%,transparent 66%);transform:translateX(-110%);animation:light-sweep 9s ease-in-out infinite}
+.location-header .illustration img{animation:scene-breathe 12s ease-in-out infinite;transform-origin:center 50%}
+.illustration:not(.illustration-compact){overflow:hidden}
+.illustration:not(.illustration-compact) img{transition:filter .45s ease,transform .45s ease}
+.illustration:not(.illustration-compact):hover img{filter:grayscale(1) contrast(1.14);transform:scale(1.015)}
+.character-card{transition:transform .2s ease,border-color .2s ease,background .2s ease}
+.character-card:hover{transform:translateY(-4px)}
+.character-card.selected{box-shadow:inset 0 0 0 1px #e7e7df,0 0 35px #e6ead810}
+.status-portrait{animation:portrait-breathe 6.5s ease-in-out infinite;transform-origin:center bottom}
+.status-column .transmission-card{position:relative;overflow:hidden}
+.transmission-card:after{content:'_';font:15px 'DM Mono',monospace;color:#e9e9e1;position:absolute;bottom:15px;right:15px;animation:blink 1.15s step-end infinite}
+.pulse{animation:indicator-pulse 3s ease-in-out infinite}
+.intent-box{animation:intent-breathe 2.8s ease-in-out infinite;position:relative}
+.intent-box:before{content:'!';position:absolute;right:12px;top:8px;font:24px 'DM Mono',monospace;color:#f1e2d8;opacity:.24;animation:intent-flare 2.8s ease-in-out infinite}
+.enemy-figure{min-width:0;position:relative;overflow:hidden}
+.enemy-figure>.illustration{margin:0}
+.enemy-figure img{animation:enemy-idle 5.5s ease-in-out infinite;transform-origin:center 65%}
+.enemy-static{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.14;background:repeating-linear-gradient(0deg,transparent,transparent 8px,#fff3 9px,transparent 10px);animation:enemy-static 5s steps(4,end) infinite}
+.battle-stage{position:relative}
+.battle-moment{position:absolute;top:23%;left:5%;width:40%;z-index:6;pointer-events:none;display:flex;align-items:center;flex-direction:column;gap:5px;text-align:center;animation:damage-pop 1s ease-out both;filter:drop-shadow(0 4px 9px #000)}
+.battle-moment strong{background:#e9eae2;color:#0d0e0c;padding:9px 12px;font:clamp(11px,1.3vw,16px) 'DM Mono',monospace;border:2px solid #0a0b0a;max-width:100%}
+.battle-moment small{color:#fff;font:9px 'DM Mono',monospace;letter-spacing:1px;background:#101110e8;padding:6px}
+.battle-moment.fx-decode strong{background:#d3ddba}.battle-moment.fx-guard strong,.battle-moment.fx-recovery strong{background:#b9c2b3}.battle-moment.fx-victory strong{background:#fff}
+.impact-active .enemy-figure img{animation:enemy-hit .42s steps(4,end) 1!important}
+.impact-active .enemy-static{opacity:.5;animation-duration:.14s}
+.move:active:not(:disabled),.choice:active,.page-chip:active,.primary:active,.secondary:active{transform:scale(.975)}
+.move:focus-visible,.choice:focus-visible{outline-offset:1px}
+.queued-actions>span:not(.muted){animation:queue-slot-in .18s cubic-bezier(.2,.7,.2,1) both}
+.queue-pips span.filled{transition:background .15s;animation:queue-glow .18s ease-out}
+.revision-moment{position:sticky;top:10px;z-index:9;border:1px solid #daddd0;background:#e7e8e0;color:#0d100d;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;padding:13px 15px;margin:0 0 13px;font:12px 'DM Mono',monospace;box-shadow:0 8px 20px #0008;animation:revision-stamp .75s ease-out both}
+.revision-moment span{font-size:10px;opacity:.68}
+.revision-moment.fx-failed-test{background:#311d1b;color:#f2d5d0;border-color:#ba756b;animation:revision-fail .95s ease-out both}
+.ending-sheet h1{animation:ending-rise 1s ease-out both}
+.horror-toggle{min-height:40px;min-width:79px;background:#1c211b;border:1px solid #575f52;color:#dbdfd2;padding:7px 11px;font:10px 'DM Mono',monospace;letter-spacing:.5px;white-space:nowrap}
+.horror-toggle:hover{border-color:#e3e8d4}.horror-toggle[aria-pressed="false"]{color:#919b91}
+.topline-actions{display:flex;align-items:center;gap:18px}.topline-actions>span{white-space:nowrap}
+.screen-reader-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+/* Fatal transmissions: one large reveal, no strobing or automatic sound. */
+.fatal-overlay{position:fixed;inset:0;z-index:1000;background:#030403;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;animation:fatal-arrive .12s ease-out both}
+.fatal-overlay:before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 36%,transparent 10%,#000 78%),repeating-linear-gradient(0deg,transparent 0,transparent 6px,#fff2 7px,transparent 8px);opacity:.85;z-index:2}
+.fatal-halo{position:absolute;width:min(105vw,740px);aspect-ratio:1;border:1px solid #eee6;box-shadow:0 0 80px #fff3,inset 0 0 75px #fff2;border-radius:50%;animation:fatal-halo .58s ease-out both;z-index:1}
+.fatal-monster{position:absolute;left:50%;top:45%;width:min(115vw,740px);height:min(90vh,860px);object-fit:cover;object-position:center 25%;filter:grayscale(1) contrast(1.65);animation:fatal-lunge 1.65s cubic-bezier(.1,.8,.13,1) both;z-index:1}
+.fatal-caption{z-index:3;position:absolute;bottom:5vh;left:12px;right:12px;max-width:700px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;animation:caption-rise .48s .3s ease-out both}
+.fatal-caption strong{font-size:clamp(24px,6.5vw,53px);font-weight:700;line-height:1;letter-spacing:-1.3px;color:#f6f6ed;text-shadow:0 3px 17px #000,0 0 5px #000}
+.fatal-caption p{color:#f7e8d8;font:clamp(10px,2.4vw,14px) 'DM Mono',monospace;letter-spacing:.3px;text-shadow:0 3px 10px #000;margin:0}
+.fatal-meta{font:10px 'DM Mono',monospace;color:#d0c1b8;text-shadow:0 2px 5px #000}
+.fatal-caption button{margin-top:9px;min-height:48px;color:#0b0c0a;background:#e9e9df;border:1px solid #fff;padding:13px 20px;font:12px 'DM Mono',monospace}
+.fatal-caption button:focus-visible{outline:3px solid #fff;outline-offset:5px}
+.motion-quiet .archive-dust,.motion-quiet .archive-noise,.motion-quiet .enemy-static{display:none}
+.motion-quiet .illustration img,.motion-quiet .status-portrait,.motion-quiet .intent-box,.motion-quiet .transmission-card:after,.motion-quiet .pulse{animation:none!important}
+@keyframes scan-drift{from{transform:translateY(0)}to{transform:translateY(12px)}}
+@keyframes dust-fall{0%{transform:translate3d(0,-7vh,0) rotate(13deg);opacity:0}15%{opacity:.27}75%{opacity:.18}100%{transform:translate3d(15px,108vh,0) rotate(-10deg);opacity:0}}
+@keyframes page-materialize{0%{opacity:.25;transform:translateY(9px);filter:contrast(1.4)}100%{opacity:1;transform:translateY(0);filter:contrast(1)}}
+@keyframes scene-breathe{0%,100%{transform:scale(1.01) translateY(0)}50%{transform:scale(1.04) translateY(-2px)}}
+@keyframes light-sweep{0%,28%,100%{transform:translateX(-115%)}56%{transform:translateX(120%)}}
+@keyframes portrait-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.017)}}
+@keyframes indicator-pulse{0%,100%{opacity:.52;box-shadow:0 0 3px #fff7}50%{opacity:1;box-shadow:0 0 13px #fff9}}
+@keyframes intent-breathe{0%,100%{border-color:#b7aaa0}50%{border-color:#f6eae0}}
+@keyframes intent-flare{0%,100%{opacity:.15}50%{opacity:.7}}
+@keyframes enemy-idle{0%,100%{transform:translateY(0) scale(1);filter:grayscale(1) contrast(1.08)}50%{transform:translateY(-5px) scale(1.015);filter:grayscale(1) contrast(1.28)}}
+@keyframes enemy-static{0%,90%,100%{transform:translate(0,0)}91%{transform:translate(-2px,3px)}94%{transform:translate(1px,-4px)}96%{transform:translate(0,2px)}}
+@keyframes enemy-hit{0%,100%{transform:translate(0,0) scale(1)}20%{transform:translate(-9px,0) scale(1.03);filter:contrast(1.9)}45%{transform:translate(10px,0) scale(1.04);filter:invert(.6)}70%{transform:translate(-4px,0) scale(1.01)}}
+@keyframes damage-pop{0%{opacity:0;transform:translateY(25px) scale(.8)}17%{opacity:1;transform:translateY(0) scale(1.08)}45%{transform:translateY(-8px) scale(1)}82%{opacity:1}100%{opacity:0;transform:translateY(-28px) scale(.97)}}
+@keyframes queue-slot-in{from{opacity:0;transform:scale(.84)}to{opacity:1;transform:scale(1)}}
+@keyframes queue-glow{from{filter:brightness(2)}to{filter:brightness(1)}}
+@keyframes revision-stamp{0%{opacity:0;transform:translateY(-8px) scale(1.02)}20%{opacity:1;transform:translateY(0) scale(1)}85%{opacity:1}100%{opacity:0;transform:translateY(-4px)}}
+@keyframes revision-fail{0%{opacity:0;transform:translateX(7px)}15%{opacity:1;transform:translateX(-5px)}30%{transform:translateX(3px)}50%,80%{transform:translateX(0);opacity:1}100%{opacity:0}}
+@keyframes ending-rise{from{opacity:.2;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fatal-arrive{from{opacity:0}to{opacity:1}}
+@keyframes fatal-halo{from{transform:scale(.1) rotate(-25deg);opacity:0}to{transform:scale(1.1) rotate(7deg);opacity:.36}}
+@keyframes fatal-lunge{0%{transform:translate(-50%,-50%) scale(.33) rotate(-4deg);opacity:.4}12%{transform:translate(-50%,-50%) scale(1.4) rotate(1deg);opacity:1}30%{transform:translate(-50%,-50%) scale(1.2)}100%{transform:translate(-50%,-50%) scale(1.32);opacity:.9}}
+@keyframes caption-rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){.battle-moment{top:22%;left:30%;width:48%}}
+@media(max-width:760px){.topline-actions{gap:6px}.topline-actions>span{display:none}.horror-toggle{min-height:42px}.archive-noise{opacity:.1}.archive-dust i:nth-child(n+5){display:none}.battle-moment{top:18%;left:21%;width:63%}.fatal-monster{height:90vh;top:42%;object-position:center 24%}.fatal-caption{bottom:max(6vh,34px)}.fatal-meta{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.archive-noise,.archive-dust,.enemy-static{display:none!important}.animated-page,.location-header,.status-portrait,.enemy-figure img,.intent-box{animation:none!important}.fatal-overlay{animation:none!important}.fatal-monster{animation:none!important;transform:translate(-50%,-50%);opacity:1}.fatal-caption{animation:none!important}}
+
+.fx-test-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:9px 0 20px}
+.fx-test-row>span{font:9px/1.55 'DM Mono',monospace;color:#989e95;max-width:290px}
+.fx-preview{font-size:10px;padding:11px 14px;min-height:44px}
+.motion-quiet .animated-page,.motion-quiet .location-header,.motion-quiet .location-header img,.motion-quiet .location-header .illustration:after,.motion-quiet .enemy-figure img,.motion-quiet .intent-box:before,.motion-quiet .transmission-card:after{animation:none!important}
+.motion-quiet .character-card,.motion-quiet .choice,.motion-quiet .move,.motion-quiet .page-chip,.motion-quiet .illustration img{transition:none!important}
+.motion-quiet .character-card:hover{transform:none}
+@media(max-width:760px){.fx-test-row{display:block}.fx-test-row>span{display:block;margin-bottom:9px}.fx-preview{width:100%}}

@@ -10,7 +10,7 @@ fs.mkdirSync(path.join(out,'vendor'),{recursive:true});
 const vendor='/opt/pyvenv/lib/python3.13/site-packages/nbclassic/static/components';
 for(const [name,source] of [['react.js',`${vendor}/react/umd/react.production.min.js`],['react-dom.js',`${vendor}/react-dom/umd/react-dom.production.min.js`]])
  fs.copyFileSync(source,path.join(out,'vendor',name));
-const paths=['src/App.tsx','src/game/content.ts','src/game/art.ts','src/game/types.ts','src/game/engine.ts','src/game/storage.ts'];
+const paths=['src/animation/effects.ts','src/animation/useMotionPreference.ts','src/App.tsx','src/game/content.ts','src/game/art.ts','src/game/types.ts','src/game/engine.ts','src/game/storage.ts'];
 const modules={};
 for(const p of paths){
  const source=fs.readFileSync(path.join(root,p),'utf8');
