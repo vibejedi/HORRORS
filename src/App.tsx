@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import { JumpscareVideo } from './components/JumpscareVideo.tsx';
+import { clipForEnding } from './game/jumpscares.ts';
 import { describeMoment, fatalCue, isNewFatality } from './animation/effects.ts';
 import type { FatalEnding, Moment } from './animation/effects.ts';
 import { useMotionPreference } from './animation/useMotionPreference.ts';
@@ -78,7 +80,7 @@ function App(){
   useEffect(()=>{try{window.localStorage.setItem(HORROR_SETTING,horrorEnabled?'on':'off');}catch{/* private browsing */}},[horrorEnabled]);
   useEffect(()=>{if(!canAnimate){setFatal(null);setMoment(null);}},[canAnimate]);
   useEffect(()=>{if(!moment)return;const timeout=window.setTimeout(()=>setMoment(null),1000);return ()=>window.clearTimeout(timeout);},[moment]);
-  useEffect(()=>{if(!fatal)return;const timeout=window.setTimeout(()=>setFatal(null),1850);return ()=>window.clearTimeout(timeout);},[fatal]);
+  // Video overlay owns its own completion, error fallback and watchdog; the summary waits until dismissal.
   useEffect(()=>{if(!fatal)return;const onKey=(e:KeyboardEvent)=>{if(e.key==='Escape'||e.key==='Enter'||e.key===' '){e.preventDefault();setFatal(null);}};window.addEventListener('keydown',onKey);return ()=>window.removeEventListener('keydown',onKey);},[fatal]);
 
   useEffect(()=>{if(game){persistRun(game);if(game.phase==='ended')setScores(storeScore(game));}},[game]);
@@ -213,10 +215,7 @@ function App(){
   const jump = fatal?fatalCue(fatal.ending):null;
   return <div className={`app-shell ${canAnimate?'motion-live':'motion-quiet'}`}>
     <div className="archive-noise" aria-hidden="true"/><div className="archive-dust" aria-hidden="true">{Array.from({length:7},(_,i)=><i key={i}/>)}</div>
-    {jump && fatal && <div className="fatal-overlay" role="alertdialog" aria-modal="true" aria-label="Fatal archive transmission" key={fatal.id} onClick={()=>setFatal(null)}>
-      <div className="fatal-halo" aria-hidden="true"/><img src={ARTWORK.enemies[jump.art]} alt="" aria-hidden="true" className="fatal-monster"/>
-      <div className="fatal-caption"><span className="fatal-meta">/ ERROR 0x000 / THERE IS SOMETHING BEHIND THE PAGE /</span><strong>{jump.title}</strong><p>{jump.detail}</p><button onClick={(event)=>{event.stopPropagation();setFatal(null);}}>{fatal.preview?'RETURN TO ARCHIVE':'VIEW INCIDENT REPORT ↗'}</button></div>
-    </div>}
+    {jump && fatal && <JumpscareVideo key={fatal.id} clip={clipForEnding(fatal.ending)} preview={Boolean(fatal.preview)} title={jump.title} detail={jump.detail} poster={ARTWORK.enemies[jump.art]} onComplete={()=>setFatal(null)}/>}
     <div className="screen-reader-only" aria-live="polite">{lastCue}</div>
     <div className="mobile-bar"><button className="menu-toggle" onClick={()=>setDrawer(!drawer)} aria-label={drawer?'Close navigation':'Open navigation'} aria-expanded={drawer}>{drawer?'×':'☰'}</button><span>TERMINAL / OF HORRORS</span><span className="online-indicator">● LOCAL</span></div>
     <div className={`nav-overlay ${drawer?'visible':''}`} onClick={()=>setDrawer(false)}/><div className={`nav-container ${drawer?'open':''}`}>{Sidebar()}</div>
