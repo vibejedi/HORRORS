@@ -87,3 +87,11 @@
 - Added FX ON/OFF toggle persisted in separate localStorage key, OS reduced-motion support, no automatic sound or flashing; the loss cue can be skipped immediately. Landing page offers a visual-only preview to inspect the animation without changing the run.
 - Added 3 tests for presentation cue mappings, actual fatal state transitions, and identical deterministic replays. `node --experimental-strip-types --test tests/*.test.ts`: 14 passing locally.
 - **Build status:** Pending GitHub Actions production `npm run check` for this commit; local sandbox has no cached npm dependencies. Production browser/touch confirmation is still required after CI.
+
+
+## 2026-10-26 — Higgsfield video death scare (v0.5)
+- Generated a 5-second **original Paper Witness breach** using Higgsfield Seedance 2.5 (job `848597c5-d503-42dd-937b-08934b1469b3`); browser player streams the completed MP4 from its generated media CDN. No WOH assets used.
+- Added `src/components/JumpscareVideo.tsx` and `src/game/jumpscares.ts`. The existing terminal failure triggers open a full-viewport inline mobile video; skip works immediately; a watchdog handles missing/stalled media and restores the incident summary. Preview remains loss-free.
+- Respects existing FX OFF and OS reduced-motion behavior. Video is muted by default for autoplay compatibility. A later optional sound control requires a separate user-gesture implementation.
+- Presentation state remains separate from seeded combat, replay and versioned saves. The UI currently uses a **remote generated MP4**, not a checked-in video asset. Before public release, consider self-hosting/optimizing the clip and verifying licensing/CDN retention. Browser playback on physical phones has not yet been verified.
+- GitHub Actions is the source of TypeScript/tests/production build verification; check the current commit before claiming final CI success.
